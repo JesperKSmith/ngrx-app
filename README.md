@@ -1,4 +1,4 @@
-# APM-Demo1
+# ngrx-app
 
 Demo of the most basic implementation of NgRx for a simple boolean flag.
 
