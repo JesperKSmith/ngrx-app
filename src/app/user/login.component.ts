@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -6,28 +6,36 @@ import { AuthService } from './auth.service';
 
 /* NgRx */
 import { Store, select } from '@ngrx/store';
-import * as fromUser from './state/user.reducer';
+import * as userReducer from './state/user.reducer';
+import * as userActions from './state/user.actions';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   pageTitle = 'Log In';
   errorMessage: string;
-
+  componentActive: boolean = true;
   maskUserName: boolean;
 
-  constructor(private store: Store<fromUser.State>,
-              private authService: AuthService,
-              private router: Router) {
-  }
+
+  constructor(
+    private store: Store<userReducer.State>,
+    private authService: AuthService,
+    private router: Router
+  ){}
 
   ngOnInit(): void {
-    // TODO: Unsubscribe
-    this.store.pipe(select(fromUser.getMaskUserName)).subscribe(
-      maskUserName =>  this.maskUserName = maskUserName
-    );
+    this.store.pipe(
+      select(userReducer.getMaskUserName),
+      takeWhile(() => this.componentActive)
+    ).subscribe(maskUserName =>  this.maskUserName = maskUserName);
+  }
+
+  ngOnDestroy(): void {
+    this.componentActive = false;
   }
 
   cancel(): void {
@@ -35,10 +43,7 @@ export class LoginComponent implements OnInit {
   }
 
   checkChanged(value: boolean): void {
-    this.store.dispatch({
-      type: 'MASK_USER_NAME',
-      payload: value
-    });
+    this.store.dispatch(new userActions.MaskUserName(value));
   }
 
   login(loginForm: NgForm): void {
