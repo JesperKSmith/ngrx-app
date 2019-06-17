@@ -64,29 +64,60 @@ export const getError = createSelector(
 )
 
 /* Reducer function */
-export function reducer(state = initialState, action: ProductActions): ProductState {
+export function reducer(state = initialState, action: ProductActions): ProductState {  
+  let updatedProducts = null;
   switch (action.type) {
 
     case ProductActionTypes.ToggleProductCode:
-      return {...state, showProductCode: action.payload };
+      return {...state, showProductCode: action.payload};
     
     case ProductActionTypes.SetCurrentProduct:
-      return {...state, currentProductId: action.payload.id };
+      return {...state, currentProductId: action.payload.id};
 
     case ProductActionTypes.ClearCurrentProduct:
-      return {...state, currentProductId: null }
+      return {...state, currentProductId: null}
 
     case ProductActionTypes.InitializeCurrentProduct:
-      return {...state, currentProductId: 0 };
+      return {...state, currentProductId: 0};
 
     case ProductActionTypes.LoadSuccess:
-        return {...state, products: action.payload, error: '' };
+        return {...state, products: action.payload, error: ''};
 
     case ProductActionTypes.LoadFail:
-      return {...state, products: [], error: action.payload };
+      return {...state, products: [], error: action.payload};
+
+    case ProductActionTypes.UpdateProductSuccess:
+      updatedProducts = state.products.map(item => action.payload.id === item.id ? action.payload : item);
+      return {...state, error: '',
+        products: updatedProducts, 
+        currentProductId: action.payload.id, 
+      };
+
+    case ProductActionTypes.LoadFail:
+        return {...state, error: action.payload};
+
+    case ProductActionTypes.CreateProductSuccess:
+      return {...state, error: '',
+        products: [...state.products, action.payload], 
+        currentProductId: action.payload.id, 
+      };
+    
+    case ProductActionTypes.CreateProductFail:
+      return {...state, error: action.payload};
+
+      
+    case ProductActionTypes.DeleteProductSuccess:
+      updatedProducts = state.products.filter(item => action.payload.id !== item.id);
+      return {...state, error: '',
+        products: updatedProducts, 
+        currentProductId: action.payload.id
+      };
+
+    case ProductActionTypes.DeleteProductFail:
+      return {...state, error: action.payload};
+
 
     default:
       return state;
   }
 }
-

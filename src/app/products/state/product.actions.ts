@@ -11,7 +11,13 @@ export enum ProductActionTypes {
   LoadFail = '[Product] Load Fail',
   UpdateProduct = '[Product] Update Product',
   UpdateProductSuccess = '[Product] Update Product Success',
-  UpdateProductFail = '[Product] Update Product Fail'
+  UpdateProductFail = '[Product] Update Product Fail',
+  DeleteProduct = '[Product] Delete Product',
+  DeleteProductSuccess = '[Product] Delete Product Success',
+  DeleteProductFail = '[Product] Delete Product Fail',
+  CreateProduct = '[Product] Create Product',
+  CreateProductSuccess = '[Product] Create ProductSuccess',
+  CreateProductFail = '[Product] Create ProductFail',
 }
 
 export class ToggleProductCode implements Action {
@@ -51,18 +57,49 @@ export class UpdateProductFail implements Action {
   readonly type = ProductActionTypes.UpdateProductFail;
   constructor(public payload: string){}
 }
+export class DeleteProduct implements Action {
+  readonly type = ProductActionTypes.DeleteProduct;
+  constructor(public payload: Product){}
+}
+export class DeleteProductSuccess implements Action {
+  readonly type = ProductActionTypes.DeleteProductSuccess;
+  constructor(public payload: Product){}
+}
+export class DeleteProductFail implements Action {
+  readonly type = ProductActionTypes.DeleteProductFail;
+  constructor(public payload: string){}
+}
+export class CreateProduct implements Action {
+  readonly type = ProductActionTypes.CreateProduct;
+  constructor(public payload: Product){}
+}
+export class CreateProductSuccess implements Action {
+  readonly type = ProductActionTypes.CreateProductSuccess;
+  constructor(public payload: Product){}
+}
+export class CreateProductFail implements Action {
+  readonly type = ProductActionTypes.CreateProductFail;
+  constructor(public payload: string){}
+}
 
 
 
 
 export type ProductActions 
 = ToggleProductCode 
-| SetCurrentProduct 
-| ClearCurrentProduct 
-| InitializeCurrentProduct
-| Load
-| LoadSuccess
-| LoadFail
-| UpdateProduct
-| UpdateProductSuccess
-| UpdateProductFail;
+  | SetCurrentProduct 
+  | ClearCurrentProduct 
+  | InitializeCurrentProduct
+  | Load
+  | LoadSuccess
+  | LoadFail
+  | UpdateProduct
+  | UpdateProductSuccess
+  | UpdateProductFail
+  | DeleteProduct
+  | DeleteProductSuccess
+  | DeleteProductFail
+  | CreateProduct
+  | CreateProductSuccess
+  | CreateProductFail
+;
